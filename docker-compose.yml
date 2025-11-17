@@ -27,15 +27,13 @@ services:
       KC_DB_PASSWORD: keycloak123
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin123
+    depends_on:
+      mysql:
+        condition: service_healthy
     ports:
       - "8080:8080"
-    depends_on:
-      - mysql
-    command: start-dev
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
-      interval: 10s
-      retries: 10
+    command: >
+      /bin/sh -c "echo 'Waiting for MySQL...'; sleep 25; /opt/keycloak/bin/kc.sh start-dev"
 
 volumes:
   mysql-data:
